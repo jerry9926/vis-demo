@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>04 - Group</title>
+    <link rel="stylesheet" href="dist/vis.css">
+    <link rel="stylesheet" href="dist/css/font-awesome.min.css">
+    <script src="dist/vis.js"></script>
+    <style type="text/css">
+        #myNetwork {
+            width: 800px;
+            height: 600px;
+            border: 1px solid lightgray;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Group</h1>
+<div id="myNetwork"></div>
+
+<script type="text/javascript">
+
+    getRandom = function(min, max) {
+        return min + (Math.floor(Math.random() * 10 * max)) % (max - min + 1);
+    };
+
+    getRandomArray = function(min, length) {
+        var result = [], markObj = {};
+
+        console.time('getRandomArray');
+        while (result.length < length) {
+            var num = getRandom(min, min + length -1);
+            if (markObj[num] === undefined) {
+                markObj[num] = 1;
+            } else {
+                markObj[num] = 2;
+            }
+
+            for(var key in markObj) {
+                if (markObj[key] == 1) {
+                    result.push(key);
+                    markObj[key]++;
+                }
+            }
+        }
+        console.timeEnd('getRandomArray');
+
+        return result;
+    };
+
+//    options init
+    var options = {};
+//    nodes init
+    var nodes = new vis.DataSet(options);
+    var gruopArray = ['diamonds', 'dotsWithLabel', 'mints', 'icons', 'source'];
+//    var gruopArray = [0, 1, 2, 3, 4];
+
+    for (var i = 1; i < 25; i ++) {
+        var index = getRandom(0, 4);
+        nodes.add([{   id: i,
+                text: 'item ' + i,
+                group: gruopArray[index]
+        }]);
+    }
+
+    // subscribe to any change in the DataSet
+    nodes.on('*', function (event, properties, senderId) {
+        console.log('event', event, properties);
+    });
+
+    // update an existing item
+    nodes.update({id: 2, text: 'item 2 update'});
+
+//    edges init
+    var edges = new vis.DataSet(options);
+//    var randomArray = getRandomArray(0, 24);
+
+    for (var i = 1; i < 25; i ++) {
+        var to = i - 1;
+        edges.add([
+            {id: i, from: i, to: to}
+        ]);
+    }
+
+//    container init
+    var container = document.getElementById('myNetwork');
+
+//    data init
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+//    networkOptions
+    var networkOptions = {
+        nodes: {
+            borderWidth: 5,
+            color: {
+                border: '#C84D4B'
+            }
+        },
+        edges: {
+            width: 2,
+            color: {
+                color: '#848484'
+            }
+        },
+        groups: {
+            diamonds: {
+                color: {background:'red',border:'white'},
+                shape: 'diamond'
+            },
+            dotsWithLabel: {
+                label: "I'm a dot!",
+                shape: 'dot',
+                color: 'cyan'
+            },
+            mints: {color:'rgb(0,255,140)'},
+            icons: {
+                shape: 'icon',
+                icon: {
+                    face: 'FontAwesome',
+                    code: '\uf0c0',
+                    size: 50,
+                    color: 'orange'
+                }
+            },
+            source: {
+                color:{border:'white'}
+            }
+        }
+    };
+
+//  network init
+    var network = new vis.Network(container, data, networkOptions);
+
+</script>
+</body>
+</html>

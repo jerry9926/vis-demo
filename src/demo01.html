@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>01 - 拓扑图展示</title>
+    <link rel="stylesheet" href="dist/lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="dist/vis.css">
+    <script src="dist/vis.js"></script>
+    <style type="text/css">
+    #mynetwork {
+        width: 800px;
+        height: 600px;
+        border: 1px solid lightgray;
+    }
+    </style>
+</head>
+<body>
+<h1>拓扑图展示</h1>
+<div id="mynetwork"></div>
+<pre id="eventSpan"></pre>
+
+
+<script type="text/javascript">
+
+    // create an array with nodes
+    var nodes = new vis.DataSet([
+        {
+            id: 1,
+            label: '深圳机房\n10'
+//            borderWidth: 2,
+        },
+        {
+            id: 2,
+            label: '香港屯门\n10'
+        },
+        {
+            id: 3,
+            label: '北京\n4',
+            color: {
+                background: '#ff635e'
+            }
+        },
+        {
+            id: 4,
+            label: '法兰克福\n5',
+            color: {
+                background: '#ffdc53'
+            }
+        },
+        {
+            id: 5,
+            label: 'ucl-1\n4'
+        },
+        {
+            id: 6,
+            label: 'ucl-2\n4'
+        },
+        {
+            id: 7,
+            label: 'ucl-3\n6'
+        },
+        {
+            id: 8,
+            label: 'ucl-4\n1'
+        },
+        {
+            id: 9,
+            label: 'bbb\n2'
+        },
+        {
+            id: 10,
+            label: 'mySQL'
+        },
+        {
+            id: 11,
+            label: 'css-1\n1'
+        },
+        {
+            id: 12,
+            label: 'css-2\n3',
+            color: {
+                background: '#ffdc53'
+            }
+        },
+        {
+            id: 13,
+            label: 'css-3\n2'
+        },
+        {
+            id: 14,
+            label: 'crm-1\n1',
+            color: {
+                background: '#ffdc53'
+            }
+        },
+        {
+            id: 15,
+            label: 'crm-2\n2'
+        },
+        {
+            id: 16,
+            label: 'crm-3\n3'
+        },
+        {
+            id: 17,
+            label: 'mongodb'
+        }
+    ]);
+
+    // create an array with edges
+    var edges = new vis.DataSet([
+        {from: 1, to: 5},
+        {from: 2, to: 5},
+        {from: 3, to: 5},
+        {from: 4, to: 5},
+        {from: 5, to: 9},
+        {from: 9, to: 6},
+        {from: 9, to: 7},
+        {from: 9, to: 8},
+        {from: 8, to: 10},
+        {from: 12, to: 11},
+        {from: 13, to: 11},
+        {from: 11, to: 9},
+        {from: 14, to: 16},
+        {from: 15, to: 16},
+        {from: 14, to: 9},
+        {from: 16, to: 17}
+    ]);
+
+    // create a network
+    var container = document.getElementById('mynetwork');
+
+    // provide the data in the vis format
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+    var options = {
+        nodes: {
+            shape: 'box',
+            shapeProperties: {
+                borderRadius: 0
+            },
+            color: {
+                background: '#82ff82'
+            }
+        },
+        edges: {
+            physics: true,
+            smooth: {
+//                type: 'cubicBezier',
+                type: 'continuous',
+                roundness: 0.35
+            }
+        },
+        configure: {
+            enabled: false,
+//            enabled: true,
+//            filter: 'nodes'
+//            filter: 'layout'
+//            filter: 'edges'
+        },
+        interaction:{
+//            dragNodes: false,
+//            dragView: false
+        },
+        layout:{
+            hierarchical: {
+//                enabled: false
+                enabled: true,
+                direction: 'LR',
+                sortMethod: 'directed'
+            }
+        }
+    };
+
+    // initialize your network!
+    var network = new vis.Network(container, data, options);
+
+    // 事件
+    network.on("click", function (params) {
+        params.event = "[original event]";
+//        document.getElementById('eventSpan').innerHTML = '<h2>Click event:</h2>' + JSON.stringify(params, null, 4);
+        var node = nodes.get(params.nodes[0]);
+        if (params.nodes[0]) {
+            alert(JSON.stringify(node));
+        }
+        console.log('node', node);
+    });
+
+
+    showData = function() {
+        document.getElementById('eventSpan').innerHTML = JSON.stringify(data, null, 4);
+    }
+</script>
+</body>
+</html>

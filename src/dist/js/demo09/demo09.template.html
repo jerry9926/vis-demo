@@ -1,0 +1,63 @@
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <p>
+      <button type="button" class="btn btn-default" ng-click="e_reload()">重新加载</button>
+      <button class="btn btn-primary" ng-click="e_export()">导出图表数据</button>
+      <button class="btn btn-primary" ng-click="e_import()">导入数据</button>
+      <button class="btn btn-danger" ng-click="e_destroy()">删除图表</button>
+     </p>
+    </div>
+
+    <div class="col-md-2">
+     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default" ng-repeat="(index, node) in treeNodes">
+       <div class="panel-heading" role="tab" id="{{'heading-'+index}}" data-id="{{node.id}}" ng-class="{draggable: !node.nodeList}">
+        <h4 class="panel-title">
+         <a role="button" data-toggle="collapse" data-parent="#accordion" href="{{'#collapse-'+index}}" aria-expanded="true" aria-controls="{{'#collapse-'+index}}" ng-bind="node.name"></a>
+        </h4>
+       </div>
+       <div id="{{'collapse-'+index}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{{'heading-'+index}}" ng-if="node.nodeList">
+        <div class="panel-body">
+         <ul class="list-group">
+          <li class="list-group-item draggable" data-id="{{nodeSub.id}}" ng-repeat="nodeSub in node.nodeList" ng-bind="nodeSub.name"></li>
+         </ul>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="col-md-8">
+     <div id="myNetwork"></div>
+    </div>
+    <div class="col-md-2">
+     <textarea class="data-view" id="dataView" ng-style="dataViewStyle" ng-bind="networkDataString"></textarea>
+    </div>
+   </div>
+  </div>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <div class="modal-header">
+      <button type="button" class="close" aria-label="Close" ng-click="e_cancel()"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" ng-bind="modalTitle"></h4>
+     </div>
+     <div class="modal-body form-horizontal">
+      <div class="input-group">
+       <label for="node-id" class="input-group-addon">id</label>
+       <input type="text" class="form-control" id="node-id" value="{{editNode.id}}" placeholder="node-id" ng-model="editNode.id" ng-disabled="editType==='EDIT'" />
+      </div>
+      <br>
+      <div class="input-group">
+       <label for="node-label" class="input-group-addon">label</label>
+       <input type="text" class="form-control" id="node-label" value="{{editNode.label}}" placeholder="node-label" ng-model="editNode.label" />
+      </div>
+     </div>
+     <div class="modal-footer">
+      <button type="button" class="btn btn-default" ng-click="e_cancel()">关闭</button>
+      <button type="button" class="btn btn-primary" ng-click="e_save()">保存</button>
+     </div>
+    </div>
+   </div>
+  </div>

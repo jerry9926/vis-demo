@@ -1,0 +1,44 @@
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <p>
+      <button type="button" class="btn btn-default" ng-click="e_reload()">重新加载</button>
+      <button class="btn btn-primary" ng-click="e_export()">导出图表数据</button>
+      <button class="btn btn-primary" ng-click="e_import()">导入数据</button>
+      <button class="btn btn-danger" ng-click="e_destroy()">删除图表</button>
+     </p>
+    </div>
+    <div class="col-md-10">
+     <div id="myNetwork"></div>
+    </div>
+    <div class="col-md-2">
+     <textarea class="data-view" id="dataView" ng-style="dataViewStyle" ng-bind="networkDataString"></textarea>
+    </div>
+   </div>
+  </div>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <div class="modal-header">
+      <button type="button" class="close" aria-label="Close" ng-click="e_cancel()"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" ng-bind="modalTitle"></h4>
+     </div>
+     <div class="modal-body form-horizontal">
+      <div class="input-group">
+       <label for="node-id" class="input-group-addon">id</label>
+       <input type="text" class="form-control" id="node-id" ng-model="editNode.id" value="{{editNode.id}}" placeholder="node-id" />
+      </div>
+      <br>
+      <div class="input-group">
+       <label for="node-label" class="input-group-addon">label</label>
+       <input type="text" class="form-control" id="node-label" ng-model="editNode.label" value="{{editNode.label}}" placeholder="node-label" />
+      </div>
+     </div>
+     <div class="modal-footer">
+      <button type="button" class="btn btn-default" ng-click="e_cancel()">关闭</button>
+      <button type="button" class="btn btn-primary" ng-click="e_save()">保存</button>
+     </div>
+    </div>
+   </div>
+  </div>

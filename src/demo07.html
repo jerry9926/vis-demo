@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>07 - 数据结构的定义</title>
+    <link rel="stylesheet" href="dist/vis.css">
+    <link rel="stylesheet" href="dist/lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="dist/css/easyTree.css">
+    <script src="dist/lib/jquery/dist/jquery.min.js"></script>
+    <script src="dist/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="dist/lib/angular/angular.js"></script>
+    <script src="dist/lib/interactjs/dist/interact.js"></script>
+    <script src="dist/vis.js"></script>
+    <style type="text/css">
+        #myNetwork {
+            height: 600px;
+        }
+        .draggable {
+            z-index: 100 !important;
+        }
+        .dropzone {
+            border: dashed 4px #dedede;
+            background: #f1f1f1;
+            transition: all 0.3s;
+        }
+        .can-drop {
+            color: #000;
+            background-color: #82ff82;
+        }
+        .drop-target {
+            background-color: #dedede;
+            border-color: #b3b3b3;
+        }
+
+    </style>
+</head>
+<body ng-controller="MyController">
+
+<h1>数据结构的定义</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-default" ng-repeat="(index, node) in nodes">
+                    <div class="panel-heading" role="tab" id="{{'heading-'+index}}" data-id="{{node.id}}" ng-class="{draggable: !node.nodeList}">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="{{'#collapse-'+index}}" aria-expanded="true" aria-controls="{{'#collapse-'+index}}" ng-bind="node.name"></a>
+                        </h4>
+                    </div>
+                    <div id="{{'collapse-'+index}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{{'heading-'+index}}" ng-if="node.nodeList">
+                        <div class="panel-body">
+                            <ul class="list-group">
+                                <li class="list-group-item draggable" data-id="{{nodeSub.id}}" ng-repeat="nodeSub in node.nodeList" ng-bind="nodeSub.name"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div id="myNetwork" class="dropzone"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+/*    // 节点
+    var node = {
+        id: '',     // 标识
+        name: '',   // 名字
+        status: ''  // 状态
+    };
+
+    // 连线
+    var edge = {
+        from: '',   // 连线出发点（id）
+        to: ''      // 连线目标点（id）
+    };
+
+    // 列表树接口
+    var treeapi = {
+        data: {
+            nodes: [
+                {
+                    id: '',     // 标识
+                    name: '',   // 名字
+                    status: '',  // 状态
+                    nodeList: [
+                        // node...
+                    ]
+                }
+                ...
+            ]
+        }
+    };
+
+    // 拓扑图接口
+    var topologyapi = {
+        data: {
+            nodes: [
+                node...
+            ],
+            edges: [
+                edge...
+            ]
+        }
+    };*/
+
+    var gobolaNodes = '';
+
+    var API_TREE_DATA = {
+        data: {
+            nodes: [
+                {
+                    id: 'a1',
+                    name: '机房',
+                    status: 0,
+                    nodeList: [
+                        {
+                            id: 1,
+                            name: '深圳机房\n10',
+                            status: 0
+                        },
+                        {
+                            id: 2,
+                            name: '香港屯门\n10',
+                            status: 0
+                        },
+                        {
+                            id: 3,
+                            name: '北京\n4',
+                            status: 2
+                        },
+                        {
+                            id: 4,
+                            name: '法兰克福\n5',
+                            status: 1
+                        }
+                    ]
+                },
+                {
+                    id: 'a2',
+                    name: 'ucl',
+                    status: 0,
+                    nodeList: [
+                        {
+                            id: 5,
+                            name: 'ucl-1\n4',
+                            status: 0
+                        },
+                        {
+                            id: 6,
+                            name: 'ucl-2\n4',
+                            status: 0
+                        },
+                        {
+                            id: 7,
+                            name: 'ucl-3\n6',
+                            status: 0
+                        },
+                        {
+                            id: 8,
+                            name: 'ucl-4\n1',
+                            status: 0
+                        }
+                    ]
+                },
+                {
+                    id: 9,
+                    name: 'bss\n2',
+                    status: 0
+                },
+                {
+                    id: 10,
+                    name: 'mySQL',
+                    status: 0
+                },
+                {
+                    id: 'a3',
+                    name: 'css',
+                    status: 0,
+                    nodeList: [
+                        {
+                            id: 11,
+                            name: 'css-1\n1',
+                            status: 0
+                        },
+                        {
+                            id: 12,
+                            name: 'css-2\n3',
+                            status: 1
+                        },
+                        {
+                            id: 13,
+                            name: 'css-3\n2',
+                            status: 0
+                        }
+                    ]
+                },
+                {
+                    id: 'a4',
+                    name: 'crm',
+                    status: 0,
+                    nodeList: [
+                        {
+                            id: 14,
+                            name: 'crm-1\n1',
+                            status: 1
+                        },
+                        {
+                            id: 15,
+                            name: 'crm-2\n2',
+                            status: 0
+                        },
+                        {
+                            id: 16,
+                            name: 'crm-3\n3',
+                            status: 0
+                        }
+                    ]
+                },
+                {
+                    id: 17,
+                    name: 'mongodb',
+                    status: 0
+                }
+            ]
+        }
+    };
+
+    var API_POLOGY_DATA = {
+        data: {
+            nodes: [
+                {
+                    id: 1,
+                    name: '深圳机房\n10',
+                    status: 0
+                },
+                {
+                    id: 2,
+                    name: '香港屯门\n10',
+                    status: 0
+                },
+                {
+                    id: 3,
+                    name: '北京\n4',
+                    status: 2
+                },
+                {
+                    id: 4,
+                    name: '法兰克福\n5',
+                    status: 1
+                },
+                {
+                    id: 5,
+                    name: 'ucl-1\n4',
+                    status: 0
+                },
+                {
+                    id: 6,
+                    name: 'ucl-2\n4',
+                    status: 0
+                },
+                {
+                    id: 7,
+                    name: 'ucl-3\n6',
+                    status: 0
+                },
+                {
+                    id: 8,
+                    name: 'ucl-4\n1',
+                    status: 0
+                },
+                {
+                    id: 9,
+                    name: 'bss\n2',
+                    status: 0
+                },
+                {
+                    id: 10,
+                    name: 'mySQL',
+                    status: 0
+                },
+                {
+                    id: 11,
+                    name: 'css-1\n1',
+                    status: 0
+                },
+                {
+                    id: 12,
+                    name: 'css-2\n3',
+                    status: 1
+                },
+                {
+                    id: 13,
+                    name: 'css-3\n2',
+                    status: 0
+                },
+                {
+                    id: 14,
+                    name: 'crm-1\n1',
+                    status: 1
+                },
+                {
+                    id: 15,
+                    name: 'crm-2\n2',
+                    status: 0
+                },
+                {
+                    id: 16,
+                    name: 'crm-3\n3',
+                    status: 0
+                },
+                {
+                    id: 17,
+                    name: 'mongodb',
+                    status: 0
+                }
+            ],
+            edges: [
+                {from: 1, to: 5},
+                {from: 2, to: 5},
+                {from: 3, to: 5},
+                {from: 4, to: 5},
+                {from: 5, to: 9},
+                {from: 9, to: 6},
+                {from: 9, to: 7},
+                {from: 9, to: 8},
+                {from: 8, to: 10},
+                {from: 12, to: 11},
+                {from: 13, to: 11},
+                {from: 11, to: 9},
+                {from: 14, to: 16},
+                {from: 15, to: 16},
+                {from: 14, to: 9},
+                {from: 16, to: 17}
+            ]
+        }
+    };
+
+    getRandom = function(min, max) {
+        return min + (Math.floor(Math.random() * 10 * max)) % (max - min + 1);
+    };
+
+    getRandomArray = function(min, length) {
+        var result = [], markObj = {};
+
+        console.time('getRandomArray');
+        while (result.length < length) {
+            var num = getRandom(min, min + length -1);
+            if (markObj[num] === undefined) {
+                markObj[num] = 1;
+            } else {
+                markObj[num] = 2;
+            }
+
+            for(var key in markObj) {
+                if (markObj[key] == 1) {
+                    result.push(key);
+                    markObj[key]++;
+                }
+            }
+        }
+        console.timeEnd('getRandomArray');
+
+        return result;
+    };
+
+    function findNodeById(id) {
+        if (!gobolaNodes) {
+            gobolaNodes = {};
+            for(var i = 0; i < API_TREE_DATA.data.nodes.length; i++) {
+                var item = API_TREE_DATA.data.nodes[i];
+                gobolaNodes[item.id] = {};
+                gobolaNodes[item.id].label = item.name;
+                gobolaNodes[item.id].status = item.status;
+                if (item.nodeList) {
+                    for(var k = 0; k < item.nodeList.length; k++) {
+                        var subItem = item.nodeList[k];
+                        gobolaNodes[subItem.id] = {};
+                        gobolaNodes[subItem.id].label = subItem.name;
+                        gobolaNodes[subItem.id].status = subItem.status;
+                    }
+                }
+            }
+        }
+        return gobolaNodes[id];
+    }
+
+    function getNetworkData() {
+        //    options init
+        var options = {};
+
+        //    nodes init
+        var nodes = new vis.DataSet(options);
+
+        for (var i = 0; i < API_POLOGY_DATA.data.nodes.length; i ++) {
+            var nodeItem = API_POLOGY_DATA.data.nodes[i];
+            var nodeData = {
+                id: nodeItem.id,
+                label: nodeItem.name
+            };
+
+            switch (nodeItem.status) {
+                case 1: {
+                    nodeData.color = {
+                        background: '#ffdc53'
+                    };
+                    break;
+                }
+                case 2: {
+                    nodeData.color = {
+                        background: '#ff635e'
+                    };
+                    break;
+                }
+                default: {
+
+                }
+            }
+
+            nodes.add([nodeData]);
+        }
+
+//    edges init
+        var edges = new vis.DataSet(options);
+//    var randomArray = getRandomArray(0, 24);
+
+        for (var i = 0; i < API_POLOGY_DATA.data.edges.length; i ++) {
+            var edgeItem = API_POLOGY_DATA.data.edges[i];
+            edges.add([
+                {id: i, from: edgeItem.from, to: edgeItem.to}
+            ]);
+        }
+
+        return {
+            nodes: nodes,
+            edges: edges
+        };
+    }
+
+    function initNetWork(data) {
+
+        // container init
+        var container = document.getElementById('myNetwork');
+
+        // data init
+        if (!data) {
+            data = getNetworkData();
+        }
+
+        console.info('initNetWork data', data);
+
+        // networkOptions
+        var networkOptions = {
+            nodes: {
+                shape: 'box',
+                shapeProperties: {
+                    borderRadius: 0
+                },
+                color: {
+                    background: '#82ff82'
+                }
+            },
+            edges: {
+                physics: true,
+                smooth: {
+                    type: 'continuous',
+                    roundness: 0.35
+                }
+            },
+            configure: {
+                enabled: false
+            },
+            layout:{
+                hierarchical: {
+                    enabled: true,
+                    direction: 'LR',
+                    sortMethod: 'directed'
+                }
+            }
+        };
+
+        //  network init
+        var network = new vis.Network(container, data, networkOptions);
+    }
+
+    function initDrag() {
+        // target elements with the "draggable" class
+        interact('.draggable')
+            .draggable({
+                // enable inertial throwing
+                inertia: false,
+                // keep the element within the area of it's parent
+                restrict: {
+//                    restriction: "parent",
+                    endOnly: true
+                },
+                // enable autoScroll
+                autoScroll: true,
+
+                // call this function on every dragmove event
+                onmove: dragMoveListener,
+                // call this function on every dragend event
+                onend: function (event) {
+
+                    var target = event.target,
+                        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+                        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+//                        x = 0,
+//                        y = 0;
+
+                    target.style.webkitTransform =
+                        target.style.transform =
+                            'translate(' + x + 'px, ' + y + 'px)';
+
+                    // update the posiion attributes
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+                }
+            });
+
+        // enable draggables to be dropped into this
+        interact('.dropzone').dropzone({
+            // only accept elements matching this CSS selector
+            accept: '.draggable',
+            // Require a 75% element overlap for a drop to be possible
+            overlap: 0.75,
+
+            // listen for drop related events:
+
+            ondropactivate: function (event) {
+                // add active dropzone feedback
+                event.target.classList.add('drop-active');
+
+                console.log('ondropactivate');
+
+            },
+            ondragenter: function (event) {
+                var draggableElement = event.relatedTarget,
+                    dropzoneElement = event.target;
+
+                // feedback the possibility of a drop
+                dropzoneElement.classList.add('drop-target');
+                draggableElement.classList.add('can-drop');
+
+                console.log('ondragenter');
+            },
+            ondragleave: function (event) {
+                // remove the drop feedback style
+                event.target.classList.remove('drop-target');
+                event.relatedTarget.classList.remove('can-drop');
+
+                console.log('ondragleave');
+            },
+            ondrop: function (event) {
+
+                console.info('ondrop event', event);
+
+                var target = event.relatedTarget,
+                        x = 0,
+                        y = 0;
+
+                setTimeout(function () {
+                    target.style.webkitTransform =
+                        target.style.transform =
+                            'translate(' + x + 'px, ' + y + 'px)';
+
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+
+                    event.target.classList.remove('drop-target');
+                    target.classList.remove('can-drop');
+
+                    console.info(target, $(target).attr('data-id'));
+
+                    var id = $(target).attr('data-id');
+
+                    var nodes = new vis.DataSet({});
+                    var nodeData = findNodeById(id);
+                    nodeData.id = id;
+                    nodes.add([nodeData]);
+
+                    console.info('nodes', nodes);
+
+                    initNetWork({nodes: nodes});
+//                    initNetWork();
+                }, 200);
+
+            },
+            ondropdeactivate: function (event) {
+                // remove active dropzone feedback
+//                event.target.classList.remove('drop-active');
+                event.target.classList.remove('drop-target');
+
+                console.log('ondropdeactivate');
+
+            }
+        });
+
+        function dragMoveListener (event) {
+            var target = event.target,
+                // keep the dragged position in the data-x/data-y attributes
+                x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+                y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+            // translate the element
+            target.style.webkitTransform =
+                target.style.transform =
+                    'translate(' + x + 'px, ' + y + 'px)';
+
+            // update the posiion attributes
+            target.setAttribute('data-x', x);
+            target.setAttribute('data-y', y);
+        }
+
+        // this is used later in the resizing and gesture demos
+        window.dragMoveListener = dragMoveListener;
+    }
+
+//    $(function () {
+
+        var myApp = angular.module('myApp', []);
+
+        myApp.controller('MyController', function MyController($scope) {
+            $scope.nodes = API_TREE_DATA.data.nodes;
+
+            //        initNetWork();
+
+            initDrag();
+        });
+
+
+//    })
+
+
+</script>
+</body>
+</html>
