@@ -2,7 +2,7 @@
   "name": "vis-demo",
   "description": "A demo for vis",
   "version": "0.0.0",
-  "homepage": "",
+  "homepage": "https://github.com/jerry9926/vis-demo",
   "license": "MIT",
   "private": true,
   "dependencies": {

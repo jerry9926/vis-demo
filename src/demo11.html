@@ -3,14 +3,14 @@
 <head>
     <title>11 - HTML in node</title>
 
-    <link rel="stylesheet" href="dist/vis.css">
-    <link rel="stylesheet" href="dist/css/font-awesome.min.css">
-    <link rel="stylesheet" href="dist/css/ionicons.min.css">
-    <link rel="stylesheet" href="dist/lib/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="dist/lib/bootstrap/dist/css/bootstrap-theme.css">
-    <script src="dist/lib/jquery/dist/jquery.min.js"></script>
-    <script src="dist/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="dist/vis.js"></script>
+    <link rel="stylesheet" href="assets/libs/vis/vis.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/ionicons.min.css">
+    <link rel="stylesheet" href="assets/libs/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="assets/libs/bootstrap/dist/css/bootstrap-theme.css">
+    <script src="assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="assets/libs/vis/vis.js"></script>
     <style type="text/css">
         body {
             font: 10pt arial;
@@ -27,12 +27,8 @@
 </head>
 
 <body onload="draw()">
-<p>
-    This example demonstrates showing custom HTML in Nodes, by using an SVG image.
-</p>
-<p style="color: red;">
-    WARNING: this is currently not supported by all browsers.
-</p>
+<h1>HTML in node</h1>
+
 
 <canvas id="mycanvas" width="300px" height="100px">
 
@@ -44,10 +40,6 @@
     var nodes = null;
     var edges = null;
     var network = null;
-
-    var DIR = 'dist/img/refresh-cl/';
-    var LENGTH_MAIN = 150;
-    var LENGTH_SUB = 50;
 
 
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="390" height="65">' +
@@ -64,7 +56,8 @@
 
     //        var url = "data:image/svg+xml;charset=utf-8,"+ encodeURIComponent(svg);
 
-    canvasDraw();
+//    canvasDraw();
+    canvasDraw2();
 
     var canvas = document.getElementById("mycanvas");
     var url    = canvas.toDataURL("image/png");
@@ -107,6 +100,35 @@
 
         context.strokeText("Hello Canvas", canvas.width/2 - 150,
             canvas.height/2 + 15 );
+    }
+
+    function canvasDraw2() {
+        var canvas = document.getElementById('mycanvas');
+        var ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = "green";
+        ctx.fillRect(10, 10, 100, 100);
+
+        ctx.beginPath();
+        ctx.moveTo(120, 10);
+        ctx.lineTo(220, 10);
+        ctx.lineTo(220, 110);
+        ctx.lineTo(120, 110);
+        ctx.lineTo(120, 10);
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.beginPath();
+        // arc(x, y, radius, startAngle, endAngle, anticlockwise)
+        ctx.arc(280, 60, 50, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        // arc(x, y, radius, startAngle, endAngle, anticlockwise)
+        ctx.arc(390, 60, 50, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.closePath();
     }
 </script>
 </body>
